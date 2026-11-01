@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Baixar o código
+    - name: Baixar código
       uses: actions/checkout@v4
 
     - name: Configurar Node.js
@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Configurar Java (Para o Android)
+    - name: Configurar Java
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
@@ -25,19 +25,19 @@ jobs:
     - name: Instalar dependências
       run: npm install
 
-    - name: Instalar Capacitor e adicionar Android
-      run: |
-        npm install @capacitor/core @capacitor/cli @capacitor/android
-        npx cap add android
-        npx cap sync
+    - name: Adicionar Android com Capacitor
+      run: npx cap add android
 
-    - name: Gerar o APK
+    - name: Sincronizar projeto
+      run: npx cap sync
+
+    - name: Gerar APK
       run: |
         cd android
         chmod +x gradlew
         ./gradlew assembleDebug
 
-    - name: Salvar o APK pronto
+    - name: Salvar APK
       uses: actions/upload-artifact@v4
       with:
         name: meu-app-apk
