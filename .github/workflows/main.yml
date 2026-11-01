@@ -1,11 +1,8 @@
 
-name: Compilar APK Android
+name: Gerar APK
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -15,11 +12,11 @@ permissions:
 
 jobs:
   build:
-    name: Gerar APK
+    name: Compilar Android
     runs-on: ubuntu-latest
 
     steps:
-      - name: Baixar código
+      - name: Baixar projeto
         uses: actions/checkout@v4
 
       - name: Configurar Java
@@ -29,7 +26,7 @@ jobs:
           java-version: '17'
 
       - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Configurar Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -38,13 +35,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Compilar APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew --no-daemon assembleDebug
 
       - name: Salvar APK
         uses: actions/upload-artifact@v4
         with:
           name: IA-CANDLE-APK
-          path: |
-            **/build/outputs/apk/debug/*.apk
+          path: '**/build/outputs/apk/debug/*.apk'
           if-no-files-found: error
           
